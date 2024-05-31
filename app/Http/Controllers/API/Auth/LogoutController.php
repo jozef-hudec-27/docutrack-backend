@@ -7,11 +7,13 @@ use Illuminate\Http\Request;
 
 class LogoutController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
-    public function __invoke(Request $request)
+    public function delete(Request $request)
     {
         return request()->user()->currentAccessToken()->delete();
+    }
+
+    public function deleteAll(Request $request)
+    {
+        return request()->user()->tokens()->delete();
     }
 }

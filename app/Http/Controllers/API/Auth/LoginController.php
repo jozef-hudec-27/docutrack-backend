@@ -18,7 +18,6 @@ class LoginController extends Controller
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
-            'device_name' => 'required',
         ]);
 
         $user = User::query()->where('email', $request->email)->first();
@@ -31,6 +30,6 @@ class LoginController extends Controller
             ]);
         }
 
-        return $user->createToken($request->device_name)->plainTextToken;
+        return $user->createToken(uniqid())->plainTextToken;
     }
 }

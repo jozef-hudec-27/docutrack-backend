@@ -19,7 +19,6 @@ class RegisterController extends Controller
                 'required', 'email', 'unique:users,email'
             ],
             'password' => ['required', 'min:8', 'confirmed'],
-            'device_name' => ['required']
         ]);
 
         $user = User::create([
@@ -28,6 +27,6 @@ class RegisterController extends Controller
             'password' => bcrypt($request->password)
         ]);
 
-        return $user->createToken($request->device_name)->plainTextToken;
+        return $user->createToken(uniqid())->plainTextToken;
     }
 }

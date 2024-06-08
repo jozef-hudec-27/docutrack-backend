@@ -12,7 +12,8 @@ class DocumentController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'tag' => 'required|string|max:255',
-            'file' => 'required|file|mimes:pdf,doc,docx,jpeg,png,jpg|max:2048',
+            'description' => 'sometimes|string|max:2000',
+            'file' => 'required|file|mimes:jpg,jpeg,png,gif,svg,bmp,tiff,webp,mp4,mov,avi,wmv,flv,mkv,webm,mp3,wav,ogg,flac,aac,wma,pdf,doc,docx,xls,xlsx,ppt,pptx,txt,rtf,zip,rar,7z,tar,gz,bz2|max:10240'
         ]);
 
         $path = $request->file('file')->store('documents');
@@ -20,6 +21,7 @@ class DocumentController extends Controller
         $document = $request->user()->documents()->create([
             'name' => $request->name,
             'tag' => $request->tag,
+            'description' => $request->description,
             'file_path' => $path,
         ]);
 
@@ -31,10 +33,8 @@ class DocumentController extends Controller
 
     public function index(Request $request)
     {
-        $documents = $request->user()->documents;
+        $documents = $request->user()->documents->sortByDesc('updated_at');
 
-        return response()->json([
-            'documents' => $documents,
-        ]);
+        return $documents->values()->all();
     }
 }

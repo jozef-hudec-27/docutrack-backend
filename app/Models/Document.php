@@ -18,5 +18,6 @@ class Document extends Model
         'name',
         'tag',
         'file_path',
+        'description'
     ];
 }

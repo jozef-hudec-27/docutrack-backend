@@ -27,6 +27,8 @@ class RegisterController extends Controller
             'password' => bcrypt($request->password)
         ]);
 
-        return $user->createToken(uniqid())->plainTextToken;
+        return response()->json([
+            'user' => $user
+        ], 201);
     }
 }

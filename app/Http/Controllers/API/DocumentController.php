@@ -26,7 +26,7 @@ class DocumentController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Document uploaded successfully',
+            'message' => 'Document uploaded successfully.',
             'document' => $document,
         ], 201);
     }
@@ -36,5 +36,26 @@ class DocumentController extends Controller
         $documents = $request->user()->documents->sortByDesc('updated_at');
 
         return $documents->values()->all();
+    }
+
+    public function update(Request $request, $id)
+    {
+        $document = $request->user()->documents()->find($id);
+
+        if (!$document) {
+            return response()->json([
+                'message' => 'Document not found.',
+            ], 404);
+        }
+
+        $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'tag' => 'sometimes|string|max:255',
+            'description' => 'sometimes|string|max:2000',
+        ]);
+
+        $document->update($request->only(['name', 'tag', 'description']));
+
+        return $document;
     }
 }

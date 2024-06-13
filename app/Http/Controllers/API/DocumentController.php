@@ -58,4 +58,21 @@ class DocumentController extends Controller
 
         return $document;
     }
+
+    public function destroy(Request $request, $id)
+    {
+        $document = $request->user()->documents()->find($id);
+
+        if (!$document) {
+            return response()->json([
+                'message' => 'Document not found.',
+            ], 404);
+        }
+
+        $document->delete();
+
+        return response()->json([
+            'message' => 'Document deleted successfully.',
+        ]);
+    }
 }

@@ -30,7 +30,22 @@ class DocumentController extends Controller
 
     public function index(Request $request)
     {
-        $documents = $request->user()->documents()->orderBy('updated_at', 'desc')->paginate(10);
+        $name = $request->get('name');
+        $tag = $request->get('tag');
+
+        $documents = $request->user()->documents();
+
+        if ($name) {
+            $documents = $documents->where('name', 'like', '%' . strtolower($name) . '%');
+        }
+
+        if ($tag) {
+            $documents = $documents->where('tag', 'like', '%' . strtolower($tag) . '%');
+        }
+
+        $per_page = ($name || $tag) ? PHP_INT_MAX : 10;
+
+        $documents = $documents->orderBy('updated_at', 'desc')->paginate($per_page);
 
         return response()->json($documents);
     }

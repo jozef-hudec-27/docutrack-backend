@@ -25,17 +25,14 @@ class DocumentController extends Controller
             'file_path' => $path,
         ]);
 
-        return response()->json([
-            'message' => 'Document uploaded successfully.',
-            'document' => $document,
-        ], 201);
+        return response()->json($document, 201);
     }
 
     public function index(Request $request)
     {
-        $documents = $request->user()->documents->sortByDesc('updated_at');
+        $documents = $request->user()->documents()->orderBy('updated_at', 'desc')->paginate(10);
 
-        return $documents->values()->all();
+        return response()->json($documents);
     }
 
     public function update(Request $request, $id)

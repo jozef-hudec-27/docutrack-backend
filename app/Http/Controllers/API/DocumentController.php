@@ -9,11 +9,20 @@ class DocumentController extends Controller
 {
     public function store(Request $request)
     {
+        $allowed_file_types = [
+            'jpg', 'jpeg', 'png', 'gif', 'svg', 'bmp', 'tiff', 'webp',
+            'mp4', 'mov', 'avi', 'wmv', 'flv', 'mkv', 'webm',
+            'mp3', 'wav', 'ogg', 'flac', 'aac', 'wma',
+            'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'rtf',
+            'zip', 'rar', '7z', 'tar', 'gz', 'bz2',
+            'py', 'js', 'java', 'cpp', 'cs', 'php', 'swift', 'rb', 'html', 'css'
+        ];
+
         $request->validate([
             'name' => 'required|string|max:255',
             'tag' => 'required|string|max:255',
             'description' => 'sometimes|string|max:2000',
-            'file' => 'required|file|mimes:jpg,jpeg,png,gif,svg,bmp,tiff,webp,mp4,mov,avi,wmv,flv,mkv,webm,mp3,wav,ogg,flac,aac,wma,pdf,doc,docx,xls,xlsx,ppt,pptx,txt,rtf,zip,rar,7z,tar,gz,bz2|max:10240'
+            'file' => 'required|file|mimes:' . implode(',', $allowed_file_types) . '|max:10240'
         ]);
 
         $path = $request->file('file')->store('documents');
